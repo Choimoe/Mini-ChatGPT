@@ -1,0 +1,45 @@
+<div id="app">
+    <h1>MiniChatGPT</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Question ID</th>
+            <th>Answer ID</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Conversation ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="question in questions" :key="question.question_id">
+            <td>{{ question.question_id }}</td>
+            <td>{{ question.answer_id }}</td>
+            <td>{{ question.question }}</td>
+            <td>{{ question.answer }}</td>
+            <td>{{ question.conversation_id }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                questions: []
+            }
+        },
+        created() {
+            this.fetchQuestions();
+        },
+        methods: {
+            async fetchQuestions() {
+                const response = await fetch('/questions');
+                const data = await response.json();
+                this.questions = data.questions;
+            }
+        }
+    });
+    app.mount('#app');
+</script>
