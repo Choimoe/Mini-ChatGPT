@@ -22,8 +22,8 @@ class MysqlClient(object):
 
     def __init__(self, mincached=10, maxcached=20, maxshared=10, maxconnections=200, blocking=True,
                  maxusage=100, setsession=None, reset=True,
-                 host='127.0.0.1', port=3306, db='forum',
-                 user='root', passwd='123456', charset='utf8mb4'):
+                 host='127.0.0.1', port=3306, db='minigpt_test',
+                 user='root', passwd='^6jSdKGfZ%j66XB#', charset='utf8mb4'):
         """
         :param mincached:连接池中空闲连接的初始数量
         :param maxcached:连接池中空闲连接的最大数量
@@ -317,7 +317,7 @@ def operate():
 
         if not data.get("isCancel"):  # 添加
             sql = """
-            UPDATE `forum`.`comment` SET
+            UPDATE `minigpt_test`.`comment` SET
             `zan` = JSON_INSERT(`zan`,'$.\"%s\"','%s') WHERE `id` = %s;
             """
             if mc.update_one(sql, (jwt_decode["id"], Times(), data.get("commentid")))[0]:
@@ -327,7 +327,7 @@ def operate():
 
         elif data.get("isCancel"):  # 取消
             sql = """
-            UPDATE `forum`.`comment` SET
+            UPDATE `minigpt_test`.`comment` SET
             `zan` = json_remove(`zan`,'$.\"%s\"') WHERE `id` = %s;
             """
             if mc.update_one(sql, (jwt_decode["id"], data.get("commentid")))[0]:
@@ -374,7 +374,7 @@ def sendPost():
         return jwt_decode
     if data.get("type") == "PureGraph":
         sql = """
-        INSERT INTO `forum`.`post` (`userid`, `title`, `type`, `content`, `link`
+        INSERT INTO `minigpt_test`.`post` (`userid`, `title`, `type`, `content`, `link`
             , `imgs`, `zan`, `scang`,`topic_id`)
         VALUES (%s, %s, %s, %s, %s
             , %s, '{}', '{}','{}');
@@ -393,7 +393,7 @@ def sendComment():
     if not check:
         return jwt_decode
     sql = """
-    INSERT INTO `forum`.`comment` (`postid`, `userid`, `content`, `imgs`,`comment`,`zan`) VALUES (%s, %s, %s, %s,'[]','[]');
+    INSERT INTO `minigpt_test`.`comment` (`postid`, `userid`, `content`, `imgs`,`comment`,`zan`) VALUES (%s, %s, %s, %s,'[]','[]');
     """
     mc.insert_one(sql, (data["postid"], jwt_decode["id"],
                         data["content"], str(data['imgs']).replace("'", "\"")))
